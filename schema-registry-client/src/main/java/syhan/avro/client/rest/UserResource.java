@@ -17,7 +17,7 @@ public class UserResource {
     private SchemaManager schemaManager;
 
     @Autowired
-    public UserResource (SchemaRegistryClient schemaRegistryClient) {
+    public UserResource(SchemaRegistryClient schemaRegistryClient) {
         //
         this.schemaManager = new SchemaManager(schemaRegistryClient);
     }

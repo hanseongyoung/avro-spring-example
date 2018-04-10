@@ -21,6 +21,11 @@ public class SchemaManager {
         this.schemaRegistryClient = schemaRegistryClient;
     }
 
+    public String findSchema(Class clazz) throws Exception {
+        //
+        return findSchema(clazz.getName());
+    }
+
     public String findSchema(String className) throws Exception {
         //
         String schema = find(className);
@@ -45,8 +50,8 @@ public class SchemaManager {
             return schemaRegistryClient.fetch(schemaReference);
         } catch (HttpClientErrorException e) {
             logger.error("status:"+e.getStatusCode());
-            logger.error("message:"+e.getMessage());
-            e.printStackTrace();
+            if (!e.getStatusCode().equals("404"))
+                throw new RuntimeException(e);
         }
         return null;
     }
@@ -58,9 +63,9 @@ public class SchemaManager {
         logger.debug("register... " + schema.toString());
         SchemaRegistrationResponse response = schemaRegistryClient.register(className, SCHEMA_FORMAT, schema.toString());
 
-        logger.debug("id:"+response.getId());
-        logger.debug("version:"+response.getSchemaReference().getVersion());
-        logger.debug("subject:"+response.getSchemaReference().getSubject());
-        logger.debug("format:"+response.getSchemaReference().getFormat());
+        logger.debug("  id:"+response.getId());
+        logger.debug("  version:"+response.getSchemaReference().getVersion());
+        logger.debug("  subject:"+response.getSchemaReference().getSubject());
+        logger.debug("  format:"+response.getSchemaReference().getFormat());
     }
 }

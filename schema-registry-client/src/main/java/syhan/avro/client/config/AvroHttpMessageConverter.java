@@ -18,6 +18,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import syhan.avro.client.avro.AvroUtil;
 import syhan.avro.client.avro.GenericRecordMapper;
+import syhan.avro.client.avro.SchemaManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +30,14 @@ public class AvroHttpMessageConverter extends AbstractHttpMessageConverter {
     //
     private static Logger logger = LoggerFactory.getLogger(AvroHttpMessageConverter.class);
 
-    public AvroHttpMessageConverter() {
+    private SchemaManager schemaManager;
+    //private Schema.Parser parser;
+
+    public AvroHttpMessageConverter(SchemaManager schemaManager) {
         //
         super(new MediaType("application", "avro"));
+        this.schemaManager = schemaManager;
+        //this.parser = new Schema.Parser();
     }
 
     @Override
@@ -45,9 +51,7 @@ public class AvroHttpMessageConverter extends AbstractHttpMessageConverter {
         //
         try {
             return readFromAvroBinary(aClass, httpInputMessage);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -56,31 +60,46 @@ public class AvroHttpMessageConverter extends AbstractHttpMessageConverter {
     protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
         //
         logger.debug("writeAsAvroBinary..................");
-        writeAsAvroBinary(o, httpOutputMessage);
+        try {
+            writeAsAvroBinary(o, httpOutputMessage);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         //writeAsAvroDataFile(o, httpOutputMessage);
     }
 
-    private Object readFromAvroBinary(Class aClass, HttpInputMessage httpInputMessage) throws IllegalArgumentException, IOException, IllegalAccessException, InstantiationException {
+    private Object readFromAvroBinary(Class aClass, HttpInputMessage httpInputMessage) throws Exception {
         //
         InputStream in = httpInputMessage.getBody();
-        Schema schema = ReflectData.AllowNull.get().getSchema(aClass);
+        //Schema schema = ReflectData.AllowNull.get().getSchema(aClass);
+        Schema schema = findSchema(aClass);
         return AvroUtil.decode(in, schema, aClass.newInstance());
     }
 
-    protected void writeAsAvroDataFile(Object o, HttpOutputMessage outputMessage) throws IOException {
+    protected void writeAsAvroDataFile(Object o, HttpOutputMessage outputMessage) throws Exception {
         //
         OutputStream os = outputMessage.getBody();
-        Schema schema = ReflectData.AllowNull.get().getSchema(getElementClass(o));
+        //Schema schema = ReflectData.AllowNull.get().getSchema(getElementClass(o));
+        Schema schema = findSchema(getElementClass(o));
 
         AvroUtil.encodeDataFile(os, o, schema);
     }
 
-    protected void writeAsAvroBinary(Object o, HttpOutputMessage outputMessage) throws IOException {
+    protected void writeAsAvroBinary(Object o, HttpOutputMessage outputMessage) throws Exception {
         //
         OutputStream os = outputMessage.getBody();
-        Schema schema = ReflectData.AllowNull.get().getSchema(getElementClass(o));
+        //Schema schema = ReflectData.AllowNull.get().getSchema(getElementClass(o));
+        Schema schema = findSchema(getElementClass(o));
 
         AvroUtil.encode(os, o, schema);
+    }
+
+    private Schema findSchema(Class aClass) throws Exception {
+        //
+        String schemaString = schemaManager.findSchema(aClass);
+        logger.debug("Class : " + aClass.getName());
+        logger.debug("finded schema : "+schemaString);
+        return new Schema.Parser().parse(schemaString);
     }
 
     private Class getElementClass(Object o) {
