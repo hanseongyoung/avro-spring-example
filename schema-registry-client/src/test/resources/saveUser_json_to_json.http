@@ -1,0 +1,10 @@
+PUT http://localhost:8080/saveUser
+Content-Type: application/json
+Accept: application/json
+
+{
+  "age" : 17,
+  "email" : "test@app.com"
+}
+
+###
