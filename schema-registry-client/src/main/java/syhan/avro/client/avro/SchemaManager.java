@@ -50,8 +50,6 @@ public class SchemaManager {
             return schemaRegistryClient.fetch(schemaReference);
         } catch (HttpClientErrorException e) {
             logger.error("status:"+e.getStatusCode());
-            if (!e.getStatusCode().equals("404"))
-                throw new RuntimeException(e);
         }
         return null;
     }
