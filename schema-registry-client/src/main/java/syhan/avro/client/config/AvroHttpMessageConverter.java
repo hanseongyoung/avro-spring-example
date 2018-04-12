@@ -1,12 +1,6 @@
 package syhan.avro.client.config;
 
 import org.apache.avro.Schema;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.BinaryEncoder;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.reflect.ReflectData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +11,6 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import syhan.avro.client.avro.AvroUtil;
-import syhan.avro.client.avro.GenericRecordMapper;
 import syhan.avro.client.avro.SchemaManager;
 
 import java.io.IOException;
@@ -31,13 +24,11 @@ public class AvroHttpMessageConverter extends AbstractHttpMessageConverter {
     private static Logger logger = LoggerFactory.getLogger(AvroHttpMessageConverter.class);
 
     private SchemaManager schemaManager;
-    //private Schema.Parser parser;
 
     public AvroHttpMessageConverter(SchemaManager schemaManager) {
         //
         super(new MediaType("application", "avro"));
         this.schemaManager = schemaManager;
-        //this.parser = new Schema.Parser();
     }
 
     @Override

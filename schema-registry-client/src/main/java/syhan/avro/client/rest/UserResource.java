@@ -1,7 +1,5 @@
 package syhan.avro.client.rest;
 
-import org.apache.avro.Schema;
-import org.apache.avro.reflect.ReflectData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

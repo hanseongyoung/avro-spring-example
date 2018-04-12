@@ -12,6 +12,7 @@
     <modules>
         <module>schema-registry-app</module>
         <module>schema-registry-client</module>
+        <module>swagger-test</module>
     </modules>
 
     <properties>

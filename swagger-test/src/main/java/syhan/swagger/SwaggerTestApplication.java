@@ -1,8 +1,7 @@
-package syhan.avro.client;
+package syhan.swagger;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.schema.client.EnableSchemaRegistryClient;
 import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -13,16 +12,15 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSchemaRegistryClient
 @EnableSwagger2
-public class SchemaRegistryClientApplication {
+public class SwaggerTestApplication {
     //
     public static void main(String[] args) {
         //
-        SpringApplication.run(SchemaRegistryClientApplication.class, args);
+        SpringApplication.run(SwaggerTestApplication.class, args);
     }
 
-    private static String basePackage = "syhan.avro.client";
+    private static String basePackage = "syhan.swagger";
     private static String title = "schema-registry-client";
     private static String description = "Schema Registry Client.";
     private static String termsOfServiceUrl = "Syhan Avro";
@@ -44,17 +42,4 @@ public class SchemaRegistryClientApplication {
                 .termsOfServiceUrl(termsOfServiceUrl)
                 .build();
     }
-
-    // optional, Default is 'DefaultSchemaRegistryClient'.
-    /*
-    @Configuration
-    static class ConfluentSchemaRegistryConfiguration {
-        @Bean
-        public SchemaRegistryClient schemaRegistryClient(@Value("${spring.cloud.stream.schemaRegistryClient.endpoint}") String endpoint){
-            ConfluentSchemaRegistryClient client = new ConfluentSchemaRegistryClient();
-            client.setEndpoint(endpoint);
-            return client;
-        }
-    }
-    */
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.schema.client.SchemaRegistryClient;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import syhan.avro.client.avro.SchemaManager;
 
@@ -24,10 +25,22 @@ public class WebConfig extends WebMvcConfigurationSupport {
         this.schemaManager = new SchemaManager(schemaRegistryClient);
     }
 
+    // for avro message convert
     @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         //
         logger.debug("add AvroHttpMessageConverter...............");
         converters.add(new AvroHttpMessageConverter(schemaManager));
+    }
+
+    // for swagger-ui
+    @Override
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //
+        logger.debug("add ResourceHandlers...............");
+        registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
