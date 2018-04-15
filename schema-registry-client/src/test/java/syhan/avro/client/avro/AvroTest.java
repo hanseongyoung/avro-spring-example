@@ -1,11 +1,11 @@
 package syhan.avro.client.avro;
 
+import com.google.gson.Gson;
 import org.apache.avro.Schema;
 import org.apache.avro.reflect.ReflectData;
 import org.junit.Assert;
 import org.junit.Test;
-import syhan.avro.client.rest.User;
-import syhan.avro.client.rest.UserSdo;
+import syhan.avro.client.rest.*;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,8 +21,9 @@ public class AvroTest {
     public void testObjectToBinaryToObject() throws Exception {
         // Object -> Binary Data -> Object
         User user = new User("홍길동", "hong@mail.com", 24);
+        user.setUserType(UserType.Teacher);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Schema schema = ReflectData.get().getSchema(User.class);
+        Schema schema = ReflectData.AllowNull.get().getSchema(User.class);
 
         // encode
         AvroUtil.encode(out, user, schema);
@@ -65,6 +66,23 @@ public class AvroTest {
     }
 
     @Test
+    public void testComplexObjectToBinaryToObject() throws Exception {
+        //
+        School school = createSchool();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Schema schema = ReflectData.AllowNull.get().getSchema(School.class);
+
+        AvroUtil.encode(out, school, schema);
+
+        byte[] bytes = out.toByteArray();
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        School targetSchool = AvroUtil.decode(in, schema, new School());
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(targetSchool));
+    }
+
+    @Test
     public void testBinary() throws Exception {
         //
         UserSdo userSdo = new UserSdo();
@@ -91,11 +109,19 @@ public class AvroTest {
         }
     }
 
+    private School createSchool() {
+        //
+        School school = new School("코딩 스쿨", 2018);
+        school.setAddress(new Address("123-678", "세종로 1가", "36번지"));
+        school.setStudents(createUsers());
+        return school;
+    }
+
     private List<User> createUsers() {
         //
         List<User> users = new ArrayList<>();
-        users.add(new User("홍길동", "hong@mail.com", 24));
-        users.add(new User("김유신", "kim@mail.com", 55));
+        users.add(new User("홍길동", "hong@mail.com", 24, UserType.Student));
+        users.add(new User("김유신", "kim@mail.com", 55, UserType.Teacher));
         return users;
     }
 }

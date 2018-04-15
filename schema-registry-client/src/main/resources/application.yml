@@ -5,3 +5,8 @@ logging:
   level:
     root: INFO
     syhan: DEBUG
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

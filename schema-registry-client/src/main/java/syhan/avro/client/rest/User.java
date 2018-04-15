@@ -4,6 +4,7 @@ public class User {
     private String name;
     private String email;
     private int age;
+    private UserType userType;
 
     public User() {
     }
@@ -12,6 +13,13 @@ public class User {
         this.name = name;
         this.email = email;
         this.age = age;
+    }
+
+    public User(String name, String email, int age, UserType userType) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.userType = userType;
     }
 
     public String getName() {
@@ -38,12 +46,21 @@ public class User {
         this.age = age;
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
+                ", userType=" + userType +
                 '}';
     }
 }
