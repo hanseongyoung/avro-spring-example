@@ -21,7 +21,7 @@ public class AvroTest {
     public void testObjectToBinaryToObject() throws Exception {
         // Object -> Binary Data -> Object
         User user = new User("홍길동", "hong@mail.com", 24);
-        user.setUserType(UserType.Teacher);
+        //user.setUserType(UserType.Teacher);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Schema schema = ReflectData.AllowNull.get().getSchema(User.class);
 
@@ -35,6 +35,7 @@ public class AvroTest {
         User result = AvroUtil.decode(in, schema, new User());
 
         Assert.assertEquals(user.getName(), result.getName());
+        System.out.println(new Gson().toJson(user));
     }
 
     @Test
@@ -69,6 +70,25 @@ public class AvroTest {
     public void testComplexObjectToBinaryToObject() throws Exception {
         //
         School school = createSchool();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Schema schema = ReflectData.AllowNull.get().getSchema(School.class);
+
+        AvroUtil.encode(out, school, schema);
+
+        byte[] bytes = out.toByteArray();
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        School targetSchool = AvroUtil.decode(in, schema, new School());
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(targetSchool));
+    }
+
+    @Test
+    public void testComplexObjectToBinaryToObjectWithNull() throws Exception {
+        //
+        School school = createSchool();
+        school.setAddress(null);
+        school.setStudents(null);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Schema schema = ReflectData.AllowNull.get().getSchema(School.class);
 

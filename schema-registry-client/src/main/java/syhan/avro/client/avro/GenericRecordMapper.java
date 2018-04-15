@@ -43,15 +43,20 @@ public class GenericRecordMapper {
             Schema.Type fieldType = getFieldType(field);
 
             if (fieldType == Schema.Type.ARRAY) {
-                GenericData.Array array = mapObjectToArray(obj, fieldSchma);
-                record.put(field.name(), array);
+                if (obj != null) {
+                    GenericData.Array array = mapObjectToArray(obj, fieldSchma);
+                    record.put(field.name(), array);
+                }
             } else if(fieldType == Schema.Type.RECORD) {
-                GenericData.Record subRecord = mapObjectToRecord(obj, fieldSchma);
-                record.put(field.name(), subRecord);
+                if (obj != null) {
+                    GenericData.Record subRecord = mapObjectToRecord(obj, fieldSchma);
+                    record.put(field.name(), subRecord);
+                }
             } else if (fieldType == Schema.Type.ENUM) {
-                // TODO : not allow enum null... in this line.
-                GenericData.EnumSymbol enumSymbol = new GenericData.EnumSymbol(fieldSchma, obj);
-                record.put(field.name(), enumSymbol);
+                if (obj != null) {
+                    GenericData.EnumSymbol enumSymbol = new GenericData.EnumSymbol(fieldSchma, obj);
+                    record.put(field.name(), enumSymbol);
+                }
             } else {
                 record.put(field.name(), obj);
             }
