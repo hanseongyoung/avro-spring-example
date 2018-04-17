@@ -1,10 +1,13 @@
 package syhan.avro.client.rest;
 
+import java.util.Date;
+
 public class User {
     private String name;
     private String email;
     private int age;
     private UserType userType;
+    private Date birthDay;
 
     public User() {
     }
@@ -54,6 +57,14 @@ public class User {
         this.userType = userType;
     }
 
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -61,6 +72,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 ", userType=" + userType +
+                ", birthDay=" + birthDay +
                 '}';
     }
 }

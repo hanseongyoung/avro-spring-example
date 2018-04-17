@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AvroTest {
@@ -22,6 +23,7 @@ public class AvroTest {
         // Object -> Binary Data -> Object
         User user = new User("홍길동", "hong@mail.com", 24);
         //user.setUserType(UserType.Teacher);
+        user.setBirthDay(new Date());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Schema schema = ReflectData.AllowNull.get().getSchema(User.class);
 
