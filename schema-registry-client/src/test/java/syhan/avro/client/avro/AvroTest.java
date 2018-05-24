@@ -22,7 +22,7 @@ public class AvroTest {
     public void testObjectToBinaryToObject() throws Exception {
         // Object -> Binary Data -> Object
         User user = new User("홍길동", "hong@mail.com", 24);
-        //user.setUserType(UserType.Teacher);
+        user.setUserType(UserType.Teacher);
         user.setBirthDay(new Date());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Schema schema = ReflectData.AllowNull.get().getSchema(User.class);
